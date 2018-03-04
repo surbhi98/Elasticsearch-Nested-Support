@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+
+<html>
+{% load staticfiles %}
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<body>
+
+
+
+<div ng-app="myApp" ng-controller="myCtrl"> 
+<input type="text" ng-model="userInput.fetchTag" ng-keyup="fetchdata()" placeholder="Type something" name="q">
+{% verbatim %}
+<hr>
+<ul>
+<li ng-repeat="x in myWelcome">
+<h3>  {{x}}</h3>
+</li>
+</ul>
+
+
+
+</div>
+
+
+<p>The $http service requests a page on the server, and the response is set as the value of the "myWelcome" variable.</p>
+
+<script>
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope, $http) {
+var sho = 'elastic'
+$scope.fetchdata = function(){
+if($scope.userInput.fetchTag.length<3) return;
+  $http({
+    method : "GET",
+    url : "http://127.0.0.1:8000/elastic/sh/" +  $scope.userInput.fetchTag
+  }).then(function onSuccess(response) {
+      $scope.myWelcome = response.data;
+	  $scope.my = $scope.userInput.fetchTag;
+    }). catch( function onError(response) {
+      $scope.myWelcome = response;
+  });
+
+  }});
+</script>
+{% endverbatim %}
+
+
+</body>
+</html>
